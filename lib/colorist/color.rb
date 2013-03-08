@@ -164,7 +164,7 @@ module Colorist
 
     # Creates a new color with the hex color provided as a number (i.e. 0x112233)
     def initialize(color=0x000000)
-      string = "%.6x" % color
+      string = (color.is_a? String) ? color : "%.6x" % color
       @r = string[0..1].hex
       @g = string[2..3].hex
       @b = string[4..5].hex
@@ -453,6 +453,21 @@ module Colorist
       brightness(formula) > threshold ? Colorist::Color.new(0x000000) : Colorist::Color.new(0xffffff)
     end
   
+    def darken(amount=0.4)
+      @r = (@r * amount).round
+      @g = (@g * amount).round
+      @b = (@b * amount).round
+      self
+    end
+
+    # Amount should be a decimal between 0 and 1. Higher means lighter
+    def lighten(amount=0.6)
+      @r = [(@r + 255 * amount).round, 255].min
+      @g = [(@g + 255 * amount).round, 255].min
+      @b = [(@b + 255 * amount).round, 255].min
+      self
+    end
+
     protected
   
     def normalize #:nodoc:
